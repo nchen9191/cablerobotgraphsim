@@ -428,47 +428,13 @@
       <div class="heading-underline"></div>
     </div>
 
-    <div class="columns is-vcentered" style="margin-top: 0.5rem; flex-wrap: wrap;">
-      <div class="column">
-        <div class="method-step">
-          <div class="step-number">1</div>
-          <h3>Sensor Inputs</h3>
-          <p>Partial observations from encoders and cameras</p>
-        </div>
-      </div>
-      <div class="column is-narrow step-arrow">→</div>
-      <div class="column">
-        <div class="method-step">
-          <div class="step-number">2</div>
-          <h3>Graph Construction</h3>
-          <p>Build node/edge graph from robot topology</p>
-        </div>
-      </div>
-      <div class="column is-narrow step-arrow">→</div>
-      <div class="column">
-        <div class="method-step">
-          <div class="step-number">3</div>
-          <h3>GNN Forward Pass</h3>
-          <p>Message passing predicts next state</p>
-        </div>
-      </div>
-      <div class="column is-narrow step-arrow">→</div>
-      <div class="column">
-        <div class="method-step">
-          <div class="step-number">4</div>
-          <h3>Co-Training</h3>
-          <p>Sim + real joint optimization</p>
-        </div>
-      </div>
-      <div class="column is-narrow step-arrow">→</div>
-      <div class="column">
-        <div class="method-step">
-          <div class="step-number">5</div>
-          <h3>MPPI Control</h3>
-          <p>Closed-loop path integral planning</p>
-        </div>
-      </div>
-    </div>
+    <figure class="image">
+      <img src="static/images/L4DC_pipeline.pdf" alt="CableRobotGraphSim method pipeline" style="width: 100%; border-radius: 6px;" />
+    </figure>
+    <p class="video-caption" style="margin-top: 0.75rem;">
+      Overview of the CableRobotGraphSim pipeline: graph construction from partial observations, GNN-based dynamics prediction, sim-and-real co-training, and closed-loop MPPI control.
+    </p>
+
   </div>
 </section>
 
