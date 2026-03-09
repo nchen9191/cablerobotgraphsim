@@ -1,490 +1,605 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="description"
-        content="Deformable Neural Radiance Fields creates free-viewpoint portraits (nerfies) from casually captured videos.">
-  <meta name="keywords" content="Nerfies, D-NeRF, NeRF">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nerfies: Deformable Neural Radiance Fields</title>
-
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-      dataLayer.push(arguments);
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CableRobotGraphSim</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    body {
+      font-family: 'Noto Sans', sans-serif;
+      color: #363636;
+    }
+    .title, .subtitle, h1, h2, h3 {
+      font-family: 'Google Sans', sans-serif;
     }
 
-    gtag('js', new Date());
+    /* NAV */
+    .navbar { background: transparent; padding: 1rem 0; }
 
-    gtag('config', 'G-PYVRSFMDRL');
-  </script>
+    /* HERO */
+    .hero-body { padding-top: 4rem; padding-bottom: 2rem; }
 
-  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
-        rel="stylesheet">
+    .publication-title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+    }
+    .publication-authors { font-size: 1.05rem; margin-bottom: 0.5rem; }
+    .author-block { display: inline-block; margin: 0 0.4rem; }
+    .author-block a { color: #3273dc; text-decoration: none; }
+    .author-block a:hover { text-decoration: underline; }
 
-  <link rel="stylesheet" href="./static/css/bulma.min.css">
-  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
-  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
-  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  <link rel="stylesheet" href="./static/css/index.css">
-  <link rel="icon" href="./static/images/favicon.svg">
+    sup.affil { font-size: 0.65rem; color: #3273dc; vertical-align: super; }
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script defer src="./static/js/fontawesome.all.min.js"></script>
-  <script src="./static/js/bulma-carousel.min.js"></script>
-  <script src="./static/js/bulma-slider.min.js"></script>
-  <script src="./static/js/index.js"></script>
+    .affiliation-list { font-size: 0.95rem; color: #555; margin-top: 0.4rem; }
+    .publication-venue { font-size: 1rem; color: #777; margin-top: 0.75rem; }
+
+    /* LINK BUTTONS */
+    .publication-links { margin-top: 1.5rem; }
+    .link-block { display: inline-block; margin: 0.3rem; }
+    .external-link { border-radius: 6px; font-family: 'Google Sans', sans-serif; font-weight: 500; }
+
+    /* TEASER */
+    #teaser { background: #fafafa; padding: 2.5rem 0 1.5rem; }
+
+    .arch-box {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1.5rem 2rem 1rem;
+      margin: 0 auto 1rem;
+      max-width: 760px;
+    }
+    .arch-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #aaa;
+      text-align: center;
+      margin-bottom: 0.75rem;
+    }
+    svg.arch-svg { width: 100%; height: 220px; display: block; }
+
+    .teaser-caption {
+      font-size: 0.92rem;
+      color: #666;
+      margin-top: 0.75rem;
+      text-align: center;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* SECTIONS */
+    section.section { padding: 3rem 1.5rem; }
+    .section-divider { border: none; border-top: 1px solid #ebebeb; margin: 0; }
+
+    .section-heading {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+    .heading-underline {
+      width: 3rem; height: 3px;
+      background: #3273dc;
+      border-radius: 2px;
+      margin: 0 auto 2rem;
+    }
+    .is-centered-text { text-align: center; }
+
+    /* ABSTRACT */
+    .abstract-content {
+      font-size: 1.02rem;
+      line-height: 1.8;
+      color: #363636;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* METHOD STEPS */
+    .method-step { text-align: center; padding: 0.75rem 0.5rem; }
+    .step-number {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 2.2rem; height: 2.2rem; border-radius: 50%;
+      background: #3273dc; color: #fff;
+      font-family: 'Google Sans', sans-serif;
+      font-weight: 700; font-size: 0.95rem;
+      margin-bottom: 0.65rem;
+    }
+    .method-step h3 {
+      font-size: 0.95rem; font-weight: 600;
+      margin-bottom: 0.35rem;
+      font-family: 'Google Sans', sans-serif;
+    }
+    .method-step p { font-size: 0.83rem; color: #666; line-height: 1.5; }
+    .step-arrow {
+      display: flex; align-items: center; justify-content: center;
+      color: #ccc; font-size: 1.4rem; padding-top: 2.6rem;
+    }
+
+    /* RESULT CARDS */
+    .result-card {
+      background: #fff; border: 1px solid #e8e8e8;
+      border-radius: 8px; padding: 1.5rem; height: 100%;
+      transition: box-shadow 0.2s;
+    }
+    .result-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.07); }
+    .result-icon { font-size: 1.8rem; margin-bottom: 0.65rem; }
+    .result-card h3 {
+      font-family: 'Google Sans', sans-serif;
+      font-weight: 600; font-size: 1rem; margin-bottom: 0.45rem;
+    }
+    .result-card p { font-size: 0.875rem; color: #666; line-height: 1.55; }
+
+    /* VIDEO PLACEHOLDER */
+    .video-placeholder {
+      background: #f0f0f0;
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #aaa;
+      gap: 0.75rem;
+      font-family: 'Google Sans', sans-serif;
+    }
+    .video-placeholder .play-icon {
+      width: 3.5rem; height: 3.5rem;
+      border-radius: 50%;
+      background: #ddd;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; color: #999;
+    }
+    .video-placeholder p { font-size: 0.9rem; margin: 0; }
+    .video-placeholder span { font-size: 0.78rem; color: #bbb; }
+    .video-caption {
+      font-size: 0.9rem; color: #777;
+      text-align: center; margin-top: 0.75rem;
+    }
+
+    /* MULTI-STEP PREDICTION CARD */
+    .prediction-card {
+      background: #fff; border: 1px solid #e8e8e8;
+      border-radius: 8px; overflow: hidden;
+    }
+    .prediction-steps {
+      display: flex; align-items: stretch;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .pred-step {
+      flex: 1; padding: 1rem 0.75rem;
+      text-align: center; position: relative;
+      border-right: 1px solid #f0f0f0;
+    }
+    .pred-step:last-child { border-right: none; }
+    .pred-step-label {
+      font-size: 0.68rem; font-family: 'Google Sans', sans-serif;
+      font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; color: #aaa;
+      margin-bottom: 0.5rem;
+    }
+    .pred-step-label.is-input  { color: #3273dc; }
+    .pred-step-label.is-pred   { color: #48c774; }
+    .pred-step-label.is-future { color: #aaa; }
+    .pred-frame {
+      width: 100%; aspect-ratio: 4/3;
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; color: #bbb;
+      font-family: 'Google Sans', sans-serif;
+    }
+    .pred-frame.input-frame  { background: #ebf2ff; color: #3273dc; }
+    .pred-frame.pred-frame-1 { background: #effaf5; color: #48c774; }
+    .pred-frame.pred-frame-2 { background: #f6fff9; color: #48c774; }
+    .pred-frame.pred-frame-3 { background: #fafffe; color: #aaa; }
+    .pred-arrow-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0; background: #fafafa;
+    }
+    .pred-arrow { flex: 1; text-align: center; color: #ddd; font-size: 1rem; padding: 0.4rem 0; }
+    .prediction-caption {
+      padding: 0.85rem 1rem;
+      font-size: 0.83rem; color: #777; line-height: 1.5;
+    }
+
+    /* BIBTEX */
+    .bibtex-wrap { position: relative; max-width: 800px; margin: 0 auto; }
+    .bibtex-block {
+      background: #f5f5f5; border-radius: 6px;
+      padding: 1.5rem 1.5rem 1.5rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem; line-height: 1.7;
+      white-space: pre; overflow-x: auto;
+      text-align: left; color: #333;
+    }
+    .copy-bibtex {
+      position: absolute; top: 0.75rem; right: 0.75rem;
+      font-family: 'Google Sans', sans-serif; font-size: 0.72rem; cursor: pointer;
+    }
+
+    /* FOOTER */
+    footer.footer {
+      background: #fafafa; padding: 2.5rem 1.5rem;
+      border-top: 1px solid #eee;
+    }
+    footer .content { font-size: 0.88rem; color: #999; }
+    footer a { color: #3273dc; }
+  </style>
 </head>
 <body>
 
-<nav class="navbar" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
-  </div>
-  <div class="navbar-menu">
-    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
-      <a class="navbar-item" href="https://keunhong.com">
-      <span class="icon">
-          <i class="fas fa-home"></i>
-      </span>
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar" role="navigation">
+  <div class="container">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://arxiv.org/abs/2602.21331" target="_blank">
+        <strong>CableRobotGraphSim</strong>
       </a>
-
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">
-          More Research
-        </a>
-        <div class="navbar-dropdown">
-          <a class="navbar-item" href="https://hypernerf.github.io">
-            HyperNeRF
-          </a>
-          <a class="navbar-item" href="https://nerfies.github.io">
-            Nerfies
-          </a>
-          <a class="navbar-item" href="https://latentfusion.github.io">
-            LatentFusion
-          </a>
-          <a class="navbar-item" href="https://photoshape.github.io">
-            PhotoShape
-          </a>
-        </div>
-      </div>
     </div>
-
   </div>
 </nav>
 
-
+<!-- ══ TITLE / AUTHORS ══ -->
 <section class="hero">
   <div class="hero-body">
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column has-text-centered">
-          <h1 class="title is-1 publication-title">Nerfies: Deformable Neural Radiance Fields</h1>
-          <div class="is-size-5 publication-authors">
-            <span class="author-block">
-              <a href="https://keunhong.com">Keunhong Park</a><sup>1</sup>,</span>
-            <span class="author-block">
-              <a href="https://utkarshsinha.com">Utkarsh Sinha</a><sup>2</sup>,</span>
-            <span class="author-block">
-              <a href="https://jonbarron.info">Jonathan T. Barron</a><sup>2</sup>,
-            </span>
-            <span class="author-block">
-              <a href="http://sofienbouaziz.com">Sofien Bouaziz</a><sup>2</sup>,
-            </span>
-            <span class="author-block">
-              <a href="https://www.danbgoldman.com">Dan B Goldman</a><sup>2</sup>,
-            </span>
-            <span class="author-block">
-              <a href="https://homes.cs.washington.edu/~seitz/">Steven M. Seitz</a><sup>1,2</sup>,
-            </span>
-            <span class="author-block">
-              <a href="http://www.ricardomartinbrualla.com">Ricardo Martin-Brualla</a><sup>2</sup>
-            </span>
-          </div>
+
+          <h1 class="title is-2 publication-title">
+            CableRobotGraphSim: A Graph Neural Network for Modeling Partially Observable Cable-Driven Robot Dynamics
+          </h1>
 
           <div class="is-size-5 publication-authors">
-            <span class="author-block"><sup>1</sup>University of Washington,</span>
-            <span class="author-block"><sup>2</sup>Google Research</span>
+            <span class="author-block">Nelson Chen<sup class="affil">1</sup>,</span>
+            <span class="author-block">William R. Johnson III<sup class="affil">2</sup>,</span>
+            <span class="author-block">Rebecca Kramer-Bottiglio<sup class="affil">2</sup>,</span>
+            <span class="author-block">Kostas Bekris<sup class="affil">1</sup>,</span>
+            <span class="author-block">Mridul Aanjaneya<sup class="affil">1</sup></span>
           </div>
 
-          <div class="column has-text-centered">
-            <div class="publication-links">
-              <!-- PDF Link. -->
-              <span class="link-block">
-                <a href="https://arxiv.org/pdf/2011.12948"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="fas fa-file-pdf"></i>
-                  </span>
-                  <span>Paper</span>
-                </a>
-              </span>
-              <span class="link-block">
-                <a href="https://arxiv.org/abs/2011.12948"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="ai ai-arxiv"></i>
-                  </span>
-                  <span>arXiv</span>
-                </a>
-              </span>
-              <!-- Video Link. -->
-              <span class="link-block">
-                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="fab fa-youtube"></i>
-                  </span>
-                  <span>Video</span>
-                </a>
-              </span>
-              <!-- Code Link. -->
-              <span class="link-block">
-                <a href="https://github.com/google/nerfies"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="fab fa-github"></i>
-                  </span>
-                  <span>Code</span>
-                  </a>
-              </span>
-              <!-- Dataset Link. -->
-              <span class="link-block">
-                <a href="https://github.com/google/nerfies/releases/tag/0.1"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="far fa-images"></i>
-                  </span>
-                  <span>Data</span>
-                  </a>
-            </div>
-
+          <div class="affiliation-list">
+            <sup class="affil">1</sup>&nbsp;Rutgers University
+            &nbsp;&nbsp;&nbsp;
+            <sup class="affil">2</sup>&nbsp;Yale University
           </div>
+
+          <div class="publication-venue">
+            arXiv · February 2026
+          </div>
+
+          <div class="publication-links">
+            <span class="link-block">
+              <a href="https://arxiv.org/abs/2602.21331" target="_blank"
+                 class="external-link button is-dark is-rounded">
+                <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                <span>Paper</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="https://arxiv.org/pdf/2602.21331" target="_blank"
+                 class="external-link button is-light is-rounded">
+                <span class="icon"><i class="fas fa-download"></i></span>
+                <span>PDF</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="#"
+                 class="external-link button is-light is-rounded" style="cursor: not-allowed; opacity: 0.6;" title="Coming soon">
+                <span class="icon"><i class="fab fa-github"></i></span>
+                <span>Code (coming soon)</span>
+              </a>
+            </span>
+
+            <span class="link-block">
+              <a href="#bibtex"
+                 class="external-link button is-light is-rounded">
+                <span class="icon"><i class="fas fa-quote-right"></i></span>
+                <span>BibTeX</span>
+              </a>
+            </span>
+          </div>
+
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="hero teaser">
+<!-- ══ TEASER ══ -->
+<section id="teaser">
   <div class="container is-max-desktop">
-    <div class="hero-body">
-      <video id="teaser" autoplay muted loop playsinline height="100%">
-        <source src="./static/videos/teaser.mp4"
-                type="video/mp4">
-      </video>
-      <h2 class="subtitle has-text-centered">
-        <span class="dnerf">Nerfies</span> turns selfie videos from your phone into
-        free-viewpoint
-        portraits.
-      </h2>
+
+    <div class="arch-box">
+      <div class="arch-label">GNN Architecture · Cable-Driven Robot as a Graph</div>
+      <svg class="arch-svg" viewBox="0 0 720 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Cable edges -->
+        <line x1="110" y1="100" x2="255" y2="52"  stroke="#3273dc" stroke-width="2" stroke-dasharray="7 4" opacity="0.5">
+          <animate attributeName="stroke-dashoffset" from="0" to="-220" dur="3s" repeatCount="indefinite"/>
+        </line>
+        <line x1="110" y1="100" x2="255" y2="148" stroke="#3273dc" stroke-width="2" stroke-dasharray="7 4" opacity="0.5">
+          <animate attributeName="stroke-dashoffset" from="0" to="-220" dur="3.7s" repeatCount="indefinite"/>
+        </line>
+        <line x1="255" y1="52"  x2="400" y2="100" stroke="#3273dc" stroke-width="2" stroke-dasharray="7 4" opacity="0.5">
+          <animate attributeName="stroke-dashoffset" from="0" to="-220" dur="2.9s" repeatCount="indefinite"/>
+        </line>
+        <line x1="255" y1="148" x2="400" y2="100" stroke="#3273dc" stroke-width="2" stroke-dasharray="7 4" opacity="0.5">
+          <animate attributeName="stroke-dashoffset" from="0" to="-220" dur="4.1s" repeatCount="indefinite"/>
+        </line>
+        <line x1="400" y1="100" x2="548" y2="55"  stroke="#3273dc" stroke-width="2" stroke-dasharray="7 4" opacity="0.5">
+          <animate attributeName="stroke-dashoffset" from="0" to="-220" dur="3.4s" repeatCount="indefinite"/>
+        </line>
+        <line x1="400" y1="100" x2="548" y2="145" stroke="#3273dc" stroke-width="2" stroke-dasharray="7 4" opacity="0.5">
+          <animate attributeName="stroke-dashoffset" from="0" to="-220" dur="3.9s" repeatCount="indefinite"/>
+        </line>
+        <!-- Contact edges -->
+        <line x1="548" y1="55"  x2="548" y2="145" stroke="#aaa" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.45"/>
+        <line x1="255" y1="52"  x2="255" y2="148" stroke="#aaa" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.45"/>
+        <!-- Nodes -->
+        <circle cx="110" cy="100" r="16" fill="#fff" stroke="#3273dc" stroke-width="2.5"/>
+        <circle cx="255" cy="52"  r="11" fill="#fff" stroke="#3273dc" stroke-width="2"><animate attributeName="r" values="11;13;11" dur="2s" repeatCount="indefinite"/></circle>
+        <circle cx="255" cy="148" r="11" fill="#fff" stroke="#3273dc" stroke-width="2"><animate attributeName="r" values="11;13;11" dur="2.5s" repeatCount="indefinite"/></circle>
+        <circle cx="400" cy="100" r="18" fill="#ebf2ff" stroke="#3273dc" stroke-width="3"/>
+        <circle cx="548" cy="55"  r="11" fill="#fff" stroke="#aaa" stroke-width="2"><animate attributeName="r" values="11;13;11" dur="1.9s" repeatCount="indefinite"/></circle>
+        <circle cx="548" cy="145" r="11" fill="#fff" stroke="#aaa" stroke-width="2"><animate attributeName="r" values="11;13;11" dur="2.3s" repeatCount="indefinite"/></circle>
+        <!-- Labels -->
+        <text x="110" y="128" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">anchor</text>
+        <text x="255" y="38"  text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">body</text>
+        <text x="255" y="170" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">body</text>
+        <text x="400" y="128" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#3273dc" font-weight="bold">end-effector</text>
+        <text x="548" y="41"  text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">contact</text>
+        <text x="548" y="167" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">contact</text>
+        <!-- Legend -->
+        <line x1="16" y1="190" x2="46" y2="190" stroke="#3273dc" stroke-width="2" stroke-dasharray="7 4"/>
+        <text x="52" y="194" font-family="sans-serif" font-size="10" fill="#aaa">cable edge</text>
+        <line x1="138" y1="190" x2="168" y2="190" stroke="#aaa" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <text x="174" y="194" font-family="sans-serif" font-size="10" fill="#aaa">contact edge</text>
+        <circle cx="292" cy="190" r="5" fill="#fff" stroke="#3273dc" stroke-width="2"/>
+        <text x="302" y="194" font-family="sans-serif" font-size="10" fill="#aaa">rigid-body node</text>
+      </svg>
     </div>
+
+    <p class="teaser-caption">
+      Cable-driven robots are represented as graphs: rigid bodies as <strong>nodes</strong>, cables and contacts as <strong>edges</strong>.
+      The GNN propagates dynamics along this topology to predict future states from partial observations.
+    </p>
+
   </div>
 </section>
 
+<hr class="section-divider" />
 
-<section class="hero is-light is-small">
-  <div class="hero-body">
-    <div class="container">
-      <div id="results-carousel" class="carousel results-carousel">
-        <div class="item item-steve">
-          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/steve.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-chair-tp">
-          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/chair-tp.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-shiba">
-          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/shiba.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-fullbody">
-          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/fullbody.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-blueshirt">
-          <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/blueshirt.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-mask">
-          <video poster="" id="mask" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/mask.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-coffee">
-          <video poster="" id="coffee" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/coffee.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-toby">
-          <video poster="" id="toby" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/toby2.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
+<!-- ══ ABSTRACT ══ -->
 <section class="section">
   <div class="container is-max-desktop">
-    <!-- Abstract. -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Abstract</h2>
-        <div class="content has-text-justified">
-          <p>
-            We present the first method capable of photorealistically reconstructing a non-rigidly
-            deforming scene using photos/videos captured casually from mobile phones.
-          </p>
-          <p>
-            Our approach augments neural radiance fields
-            (NeRF) by optimizing an
-            additional continuous volumetric deformation field that warps each observed point into a
-            canonical 5D NeRF.
-            We observe that these NeRF-like deformation fields are prone to local minima, and
-            propose a coarse-to-fine optimization method for coordinate-based models that allows for
-            more robust optimization.
-            By adapting principles from geometry processing and physical simulation to NeRF-like
-            models, we propose an elastic regularization of the deformation field that further
-            improves robustness.
-          </p>
-          <p>
-            We show that <span class="dnerf">Nerfies</span> can turn casually captured selfie
-            photos/videos into deformable NeRF
-            models that allow for photorealistic renderings of the subject from arbitrary
-            viewpoints, which we dub <i>"nerfies"</i>. We evaluate our method by collecting data
-            using a
-            rig with two mobile phones that take time-synchronized photos, yielding train/validation
-            images of the same pose at different viewpoints. We show that our method faithfully
-            reconstructs non-rigidly deforming scenes and reproduces unseen views with high
-            fidelity.
-          </p>
-        </div>
-      </div>
+    <div class="is-centered-text">
+      <h2 class="section-heading">Abstract</h2>
+      <div class="heading-underline"></div>
     </div>
-    <!--/ Abstract. -->
-
-    <!-- Paper video. -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Video</h2>
-        <div class="publication-video">
-          <iframe src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0"
-                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
-      </div>
+    <div class="abstract-content">
+      <p>
+        General-purpose simulators have accelerated the development of robots. Traditional simulators based on first-principles, however, typically require full-state observability or depend on parameter search for system identification. This work presents <strong>CableRobotGraphSim</strong>, a novel Graph Neural Network (GNN) model for cable-driven robots that aims to address shortcomings of prior simulation solutions.
+      </p>
+      <br/>
+      <p>
+        By representing cable-driven robots as graphs—with the rigid-bodies as nodes and the cables and contacts as edges—this model can quickly and accurately match the properties of other simulation models and real robots, while ingesting only <strong>partially observable inputs</strong>. Accompanying the GNN model is a <strong>sim-and-real co-training procedure</strong> that promotes generalization and robustness to noisy real data. This model is further integrated with a <strong>Model Predictive Path Integral (MPPI) controller</strong> for closed-loop navigation, which showcases the model's speed and accuracy.
+      </p>
     </div>
-    <!--/ Paper video. -->
   </div>
 </section>
 
+<hr class="section-divider" />
 
+<!-- ══ VIDEO ══ -->
 <section class="section">
   <div class="container is-max-desktop">
+    <div class="is-centered-text">
+      <h2 class="section-heading">Video</h2>
+      <div class="heading-underline"></div>
+    </div>
 
-    <div class="columns is-centered">
+    <div class="video-placeholder">
+      <div class="play-icon">▶</div>
+      <p>Video coming soon</p>
+      <span>Replace this block with a &lt;video&gt; tag or YouTube embed</span>
+    </div>
+    <p class="video-caption">
+      Overview of CableRobotGraphSim: graph construction, GNN forward passes, and closed-loop MPPI navigation. <em>(Video has sound.)</em>
+    </p>
 
-      <!-- Visual Effects. -->
+  </div>
+</section>
+
+<hr class="section-divider" />
+
+<!-- ══ METHOD ══ -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="is-centered-text">
+      <h2 class="section-heading">Method</h2>
+      <div class="heading-underline"></div>
+    </div>
+
+    <div class="columns is-vcentered" style="margin-top: 0.5rem; flex-wrap: wrap;">
       <div class="column">
-        <div class="content">
-          <h2 class="title is-3">Visual Effects</h2>
-          <p>
-            Using <i>nerfies</i> you can create fun visual effects. This Dolly zoom effect
-            would be impossible without nerfies since it would require going through a wall.
-          </p>
-          <video id="dollyzoom" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/dollyzoom-stacked.mp4"
-                    type="video/mp4">
-          </video>
+        <div class="method-step">
+          <div class="step-number">1</div>
+          <h3>Sensor Inputs</h3>
+          <p>Partial observations from encoders and cameras</p>
         </div>
       </div>
-      <!--/ Visual Effects. -->
-
-      <!-- Matting. -->
+      <div class="column is-narrow step-arrow">→</div>
       <div class="column">
-        <h2 class="title is-3">Matting</h2>
-        <div class="columns is-centered">
-          <div class="column content">
-            <p>
-              As a byproduct of our method, we can also solve the matting problem by ignoring
-              samples that fall outside of a bounding box during rendering.
-            </p>
-            <video id="matting-video" controls playsinline height="100%">
-              <source src="./static/videos/matting.mp4"
-                      type="video/mp4">
-            </video>
-          </div>
-
+        <div class="method-step">
+          <div class="step-number">2</div>
+          <h3>Graph Construction</h3>
+          <p>Build node/edge graph from robot topology</p>
+        </div>
+      </div>
+      <div class="column is-narrow step-arrow">→</div>
+      <div class="column">
+        <div class="method-step">
+          <div class="step-number">3</div>
+          <h3>GNN Forward Pass</h3>
+          <p>Message passing predicts next state</p>
+        </div>
+      </div>
+      <div class="column is-narrow step-arrow">→</div>
+      <div class="column">
+        <div class="method-step">
+          <div class="step-number">4</div>
+          <h3>Co-Training</h3>
+          <p>Sim + real joint optimization</p>
+        </div>
+      </div>
+      <div class="column is-narrow step-arrow">→</div>
+      <div class="column">
+        <div class="method-step">
+          <div class="step-number">5</div>
+          <h3>MPPI Control</h3>
+          <p>Closed-loop path integral planning</p>
         </div>
       </div>
     </div>
-    <!--/ Matting. -->
+  </div>
+</section>
 
-    <!-- Animation. -->
-    <div class="columns is-centered">
-      <div class="column is-full-width">
-        <h2 class="title is-3">Animation</h2>
+<hr class="section-divider" />
 
-        <!-- Interpolating. -->
-        <h3 class="title is-4">Interpolating states</h3>
-        <div class="content has-text-justified">
-          <p>
-            We can also animate the scene by interpolating the deformation latent codes of two input
-            frames. Use the slider here to linearly interpolate between the left frame and the right
-            frame.
-          </p>
+<!-- ══ KEY CONTRIBUTIONS ══ -->
+<section class="section" style="background: #fafafa;">
+  <div class="container is-max-desktop">
+    <div class="is-centered-text">
+      <h2 class="section-heading">Key Contributions</h2>
+      <div class="heading-underline"></div>
+    </div>
+    <div class="columns is-multiline">
+      <div class="column is-half">
+        <div class="result-card">
+          <div class="result-icon">🕸️</div>
+          <h3>Graph Representation</h3>
+          <p>Rigid bodies as nodes, cables and contacts as edges. The graph topology mirrors physical structure, providing a strong inductive bias for learning dynamics.</p>
         </div>
-        <div class="columns is-vcentered interpolation-panel">
-          <div class="column is-3 has-text-centered">
-            <img src="./static/images/interpolate_start.jpg"
-                 class="interpolation-image"
-                 alt="Interpolate start reference image."/>
-            <p>Start Frame</p>
-          </div>
-          <div class="column interpolation-video-column">
-            <div id="interpolation-image-wrapper">
-              Loading...
+      </div>
+      <div class="column is-half">
+        <div class="result-card">
+          <div class="result-icon">👁️</div>
+          <h3>Partial Observability</h3>
+          <p>Operates on incomplete sensor data—no full state estimation or privileged simulation access is required during inference.</p>
+        </div>
+      </div>
+      <div class="column is-half">
+        <div class="result-card">
+          <div class="result-icon">🔄</div>
+          <h3>Sim-and-Real Co-Training</h3>
+          <p>A joint training procedure leveraging abundant clean simulation data alongside scarce, noisy real robot rollouts to improve real-world generalization.</p>
+        </div>
+      </div>
+      <div class="column is-half">
+        <div class="result-card">
+          <div class="result-icon">🎯</div>
+          <h3>MPPI Integration</h3>
+          <p>The learned forward model integrates directly with a Model Predictive Path Integral controller for fast, accurate closed-loop navigation on real hardware.</p>
+        </div>
+      </div>
+
+      <div class="column is-half">
+        <div class="prediction-card">
+          <div class="prediction-steps">
+            <div class="pred-step">
+              <div class="pred-step-label is-input">Input (t)</div>
+              <div class="pred-frame input-frame">observed state</div>
             </div>
-            <input class="slider is-fullwidth is-large is-info"
-                   id="interpolation-slider"
-                   step="1" min="0" max="100" value="0" type="range">
+            <div class="pred-step" style="flex: 0.4; display: flex; align-items: center; justify-content: center; border-right: none;">
+              <div style="text-align: center;">
+                <div style="font-size: 0.7rem; font-family: 'Google Sans', sans-serif; color: #aaa; margin-bottom: 0.3rem;">single inference</div>
+                <div style="font-size: 1.5rem; color: #3273dc;">→</div>
+                <div style="font-size: 0.68rem; font-family: 'Google Sans', sans-serif; color: #3273dc; font-weight: 600; letter-spacing: 0.05em;">GNN</div>
+              </div>
+            </div>
+            <div class="pred-step">
+              <div class="pred-step-label is-pred">Output (t+h)</div>
+              <div class="pred-frame pred-frame-1">predicted state</div>
+            </div>
           </div>
-          <div class="column is-3 has-text-centered">
-            <img src="./static/images/interpolate_end.jpg"
-                 class="interpolation-image"
-                 alt="Interpolation end reference image."/>
-            <p class="is-bold">End Frame</p>
+          <div class="prediction-caption">
+            <strong>Multi-Step Prediction.</strong> In a single forward pass, CableRobotGraphSim predicts the robot state <em>h</em> steps into the future directly from a partially-observed input at time <em>t</em>—no auto-regressive rollout required. Replace the placeholder frames above with your own visualizations.
           </div>
-        </div>
-        <br/>
-        <!--/ Interpolating. -->
-
-        <!-- Re-rendering. -->
-        <h3 class="title is-4">Re-rendering the input video</h3>
-        <div class="content has-text-justified">
-          <p>
-            Using <span class="dnerf">Nerfies</span>, you can re-render a video from a novel
-            viewpoint such as a stabilized camera by playing back the training deformations.
-          </p>
-        </div>
-        <div class="content has-text-centered">
-          <video id="replay-video"
-                 controls
-                 muted
-                 preload
-                 playsinline
-                 width="75%">
-            <source src="./static/videos/replay.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <!--/ Re-rendering. -->
-
-      </div>
-    </div>
-    <!--/ Animation. -->
-
-
-    <!-- Concurrent Work. -->
-    <div class="columns is-centered">
-      <div class="column is-full-width">
-        <h2 class="title is-3">Related Links</h2>
-
-        <div class="content has-text-justified">
-          <p>
-            There's a lot of excellent work that was introduced around the same time as ours.
-          </p>
-          <p>
-            <a href="https://arxiv.org/abs/2104.09125">Progressive Encoding for Neural Optimization</a> introduces an idea similar to our windowed position encoding for coarse-to-fine optimization.
-          </p>
-          <p>
-            <a href="https://www.albertpumarola.com/research/D-NeRF/index.html">D-NeRF</a> and <a href="https://gvv.mpi-inf.mpg.de/projects/nonrigid_nerf/">NR-NeRF</a>
-            both use deformation fields to model non-rigid scenes.
-          </p>
-          <p>
-            Some works model videos with a NeRF by directly modulating the density, such as <a href="https://video-nerf.github.io/">Video-NeRF</a>, <a href="https://www.cs.cornell.edu/~zl548/NSFF/">NSFF</a>, and <a href="https://neural-3d-video.github.io/">DyNeRF</a>
-          </p>
-          <p>
-            There are probably many more by the time you are reading this. Check out <a href="https://dellaert.github.io/NeRF/">Frank Dellart's survey on recent NeRF papers</a>, and <a href="https://github.com/yenchenlin/awesome-NeRF">Yen-Chen Lin's curated list of NeRF papers</a>.
-          </p>
         </div>
       </div>
     </div>
-    <!--/ Concurrent Work. -->
-
   </div>
 </section>
 
+<hr class="section-divider" />
 
-<section class="section" id="BibTeX">
-  <div class="container is-max-desktop content">
-    <h2 class="title">BibTeX</h2>
-    <pre><code>@article{park2021nerfies,
-  author    = {Park, Keunhong and Sinha, Utkarsh and Barron, Jonathan T. and Bouaziz, Sofien and Goldman, Dan B and Seitz, Steven M. and Martin-Brualla, Ricardo},
-  title     = {Nerfies: Deformable Neural Radiance Fields},
-  journal   = {ICCV},
-  year      = {2021},
-}</code></pre>
+<!-- ══ BIBTEX ══ -->
+<section class="section" id="bibtex">
+  <div class="container is-max-desktop">
+    <div class="is-centered-text">
+      <h2 class="section-heading">BibTeX</h2>
+      <div class="heading-underline"></div>
+    </div>
+    <div class="bibtex-wrap">
+      <button class="button is-small is-light copy-bibtex" onclick="copyBibtex()">
+        <span class="icon"><i class="fas fa-copy"></i></span>
+        <span>Copy</span>
+      </button>
+      <pre class="bibtex-block">@article{chen2026cablerobotgraphsim,
+  title   = {CableRobotGraphSim: A Graph Neural Network for
+             Modeling Partially Observable Cable-Driven
+             Robot Dynamics},
+  author  = {Chen, Nelson and Johnson III, William R. and
+             Kramer-Bottiglio, Rebecca and Bekris, Kostas and
+             Aanjaneya, Mridul},
+  journal = {arXiv preprint arXiv:2602.21331},
+  year    = {2026}
+}</pre>
+    </div>
   </div>
 </section>
 
-
+<!-- ══ FOOTER ══ -->
 <footer class="footer">
   <div class="container">
     <div class="content has-text-centered">
-      <a class="icon-link"
-         href="./static/videos/nerfies_paper.pdf">
-        <i class="fas fa-file-pdf"></i>
-      </a>
-      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
-        <i class="fab fa-github"></i>
-      </a>
-    </div>
-    <div class="columns is-centered">
-      <div class="column is-8">
-        <div class="content">
-          <p>
-            This website is licensed under a <a rel="license"
-                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
-            Commons Attribution-ShareAlike 4.0 International License</a>.
-          </p>
-          <p>
-            This means you are free to borrow the <a
-              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
-            we just ask that you link back to this page in the footer.
-            Please remember to remove the analytics code included in the header of the website which
-            you do not want on your website.
-          </p>
-        </div>
-      </div>
+      <p>
+        <a href="https://arxiv.org/abs/2602.21331" target="_blank">arXiv:2602.21331</a>
+        &nbsp;·&nbsp; Submitted February 24, 2026
+        &nbsp;·&nbsp; Rutgers University &amp; Yale University
+      </p>
+      <p>
+        Website template adapted from <a href="https://github.com/nerfies/nerfies.github.io" target="_blank">Nerfies</a>.
+      </p>
     </div>
   </div>
 </footer>
+
+<script>
+  function copyBibtex() {
+    const raw = `@article{chen2026cablerobotgraphsim,
+  title   = {CableRobotGraphSim: A Graph Neural Network for Modeling Partially Observable Cable-Driven Robot Dynamics},
+  author  = {Chen, Nelson and Johnson III, William R. and Kramer-Bottiglio, Rebecca and Bekris, Kostas and Aanjaneya, Mridul},
+  journal = {arXiv preprint arXiv:2602.21331},
+  year    = {2026}
+}`;
+    navigator.clipboard.writeText(raw).then(() => {
+      const btn = document.querySelector('.copy-bibtex');
+      btn.innerHTML = '<span class="icon"><i class="fas fa-check"></i></span><span>Copied!</span>';
+      setTimeout(() => {
+        btn.innerHTML = '<span class="icon"><i class="fas fa-copy"></i></span><span>Copy</span>';
+      }, 2000);
+    });
+  }
+</script>
 
 </body>
 </html>
