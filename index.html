@@ -318,58 +318,12 @@
 <section id="teaser">
   <div class="container is-max-desktop">
 
-    <div class="arch-box">
-      <div class="arch-label">GNN Architecture · Cable-Driven Robot as a Graph</div>
-      <svg class="arch-svg" viewBox="0 0 720 200" xmlns="http://www.w3.org/2000/svg">
-        <!-- Cable edges -->
-        <line x1="110" y1="100" x2="255" y2="52"  stroke="#3273dc" stroke-width="2" stroke-dasharray="7 4" opacity="0.5">
-          <animate attributeName="stroke-dashoffset" from="0" to="-220" dur="3s" repeatCount="indefinite"/>
-        </line>
-        <line x1="110" y1="100" x2="255" y2="148" stroke="#3273dc" stroke-width="2" stroke-dasharray="7 4" opacity="0.5">
-          <animate attributeName="stroke-dashoffset" from="0" to="-220" dur="3.7s" repeatCount="indefinite"/>
-        </line>
-        <line x1="255" y1="52"  x2="400" y2="100" stroke="#3273dc" stroke-width="2" stroke-dasharray="7 4" opacity="0.5">
-          <animate attributeName="stroke-dashoffset" from="0" to="-220" dur="2.9s" repeatCount="indefinite"/>
-        </line>
-        <line x1="255" y1="148" x2="400" y2="100" stroke="#3273dc" stroke-width="2" stroke-dasharray="7 4" opacity="0.5">
-          <animate attributeName="stroke-dashoffset" from="0" to="-220" dur="4.1s" repeatCount="indefinite"/>
-        </line>
-        <line x1="400" y1="100" x2="548" y2="55"  stroke="#3273dc" stroke-width="2" stroke-dasharray="7 4" opacity="0.5">
-          <animate attributeName="stroke-dashoffset" from="0" to="-220" dur="3.4s" repeatCount="indefinite"/>
-        </line>
-        <line x1="400" y1="100" x2="548" y2="145" stroke="#3273dc" stroke-width="2" stroke-dasharray="7 4" opacity="0.5">
-          <animate attributeName="stroke-dashoffset" from="0" to="-220" dur="3.9s" repeatCount="indefinite"/>
-        </line>
-        <!-- Contact edges -->
-        <line x1="548" y1="55"  x2="548" y2="145" stroke="#aaa" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.45"/>
-        <line x1="255" y1="52"  x2="255" y2="148" stroke="#aaa" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.45"/>
-        <!-- Nodes -->
-        <circle cx="110" cy="100" r="16" fill="#fff" stroke="#3273dc" stroke-width="2.5"/>
-        <circle cx="255" cy="52"  r="11" fill="#fff" stroke="#3273dc" stroke-width="2"><animate attributeName="r" values="11;13;11" dur="2s" repeatCount="indefinite"/></circle>
-        <circle cx="255" cy="148" r="11" fill="#fff" stroke="#3273dc" stroke-width="2"><animate attributeName="r" values="11;13;11" dur="2.5s" repeatCount="indefinite"/></circle>
-        <circle cx="400" cy="100" r="18" fill="#ebf2ff" stroke="#3273dc" stroke-width="3"/>
-        <circle cx="548" cy="55"  r="11" fill="#fff" stroke="#aaa" stroke-width="2"><animate attributeName="r" values="11;13;11" dur="1.9s" repeatCount="indefinite"/></circle>
-        <circle cx="548" cy="145" r="11" fill="#fff" stroke="#aaa" stroke-width="2"><animate attributeName="r" values="11;13;11" dur="2.3s" repeatCount="indefinite"/></circle>
-        <!-- Labels -->
-        <text x="110" y="128" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">anchor</text>
-        <text x="255" y="38"  text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">body</text>
-        <text x="255" y="170" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">body</text>
-        <text x="400" y="128" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#3273dc" font-weight="bold">end-effector</text>
-        <text x="548" y="41"  text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">contact</text>
-        <text x="548" y="167" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">contact</text>
-        <!-- Legend -->
-        <line x1="16" y1="190" x2="46" y2="190" stroke="#3273dc" stroke-width="2" stroke-dasharray="7 4"/>
-        <text x="52" y="194" font-family="sans-serif" font-size="10" fill="#aaa">cable edge</text>
-        <line x1="138" y1="190" x2="168" y2="190" stroke="#aaa" stroke-width="1.5" stroke-dasharray="4 3"/>
-        <text x="174" y="194" font-family="sans-serif" font-size="10" fill="#aaa">contact edge</text>
-        <circle cx="292" cy="190" r="5" fill="#fff" stroke="#3273dc" stroke-width="2"/>
-        <text x="302" y="194" font-family="sans-serif" font-size="10" fill="#aaa">rigid-body node</text>
-      </svg>
-    </div>
+    <figure class="image" style="margin-bottom: 1rem;">
+      <img src="static/images/L4DC_pipeline.png" alt="CableRobotGraphSim method pipeline" style="width: 100%; border-radius: 6px;" />
+    </figure>
 
     <p class="teaser-caption">
-      Cable-driven robots are represented as graphs: rigid bodies as <strong>nodes</strong>, cables and contacts as <strong>edges</strong>.
-      The GNN propagates dynamics along this topology to predict future states from partial observations.
+      Overview of the CableRobotGraphSim pipeline: graph construction from partial observations, GNN-based dynamics prediction, sim-and-real co-training, and closed-loop MPPI control.
     </p>
 
   </div>
@@ -413,26 +367,6 @@
     </div>
     <p class="video-caption">
       Overview of CableRobotGraphSim: graph construction, GNN forward passes, and closed-loop MPPI navigation. <em>(Video has sound.)</em>
-    </p>
-
-  </div>
-</section>
-
-<hr class="section-divider" />
-
-<!-- ══ METHOD ══ -->
-<section class="section">
-  <div class="container is-max-desktop">
-    <div class="is-centered-text">
-      <h2 class="section-heading">Method</h2>
-      <div class="heading-underline"></div>
-    </div>
-
-    <figure class="image">
-      <img src="static/images/L4DC_pipeline.png" alt="CableRobotGraphSim method pipeline" style="width: 100%; border-radius: 6px;" />
-    </figure>
-    <p class="video-caption" style="margin-top: 0.75rem;">
-      Overview of the CableRobotGraphSim pipeline: graph construction from partial observations, GNN-based dynamics prediction, sim-and-real co-training, and closed-loop MPPI control.
     </p>
 
   </div>
